@@ -1,1 +1,34 @@
-123
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Укажите ветку, с которой будет запускаться деплой
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Действие будет выполняться на Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Укажите нужную версию Node.js
+
+      - name: Install dependencies
+        run: |
+          npm install  # Установите зависимости через npm
+
+      - name: Build the project
+        run: |
+          npm run build  # Сборка проекта
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GH_DEPLOY_TOKEN }}  # Использование вашего PAT токена
+          branch: gh-pages  # Укажите ветку для деплоя
+          folder: dist  # Папка с собранными файлами
